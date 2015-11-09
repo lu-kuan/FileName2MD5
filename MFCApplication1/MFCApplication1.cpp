@@ -36,41 +36,41 @@ CMFCApplication1App theApp;
 
 BOOL CMFCApplication1App::InitInstance()
 {
-	HKEY Key;
-	CString sKeyPath;
-	sKeyPath = "Software\\mingrisoft";
-	if (RegOpenKey(HKEY_CURRENT_USER, sKeyPath, &Key) != 0 && RegOpenKey(HKEY_CURRENT_USER, sKeyPath, &Key) != ERROR_SUCCESS)
-	{
-		//在注册表中记录已试用的次数
-		::RegCreateKey(HKEY_CURRENT_USER, sKeyPath, &Key);
-		::RegSetValueEx(Key, "TryTime", 0, REG_SZ, (unsigned char*)"20", 2);
-		::RegCloseKey(Key);
-		MessageBox(NULL, "您还可以试用20次！", "系统提示", MB_OK | MB_ICONEXCLAMATION);
-	}
-	else //已经存在注册信息
-	{
-		CString sTryTime;
-		int nTryTime;
-		LPBYTE Data = new BYTE[80];
-		DWORD TYPE = REG_SZ;
-		DWORD cbData = 80;
-		//取出已记载的数量
-		::RegQueryValueEx(Key, "TryTime", 0, &TYPE, Data, &cbData);
-		sTryTime.Format("%s", Data);
-		nTryTime = atoi(sTryTime);
-		if (nTryTime<1)
-		{
-			MessageBox(NULL, "您的最大试用次数已过，只有注册后才允许继续使用！", "系统提示", MB_OK | MB_ICONSTOP);
+	//HKEY Key;
+	//CString sKeyPath;
+	//sKeyPath = "Software\\mingrisoft";
+	//if (RegOpenKey(HKEY_CURRENT_USER, sKeyPath, &Key) != 0 && RegOpenKey(HKEY_CURRENT_USER, sKeyPath, &Key) != ERROR_SUCCESS)
+	//{
+	//	//在注册表中记录已试用的次数
+	//	::RegCreateKey(HKEY_CURRENT_USER, sKeyPath, &Key);
+	//	::RegSetValueEx(Key, "TryTime", 0, REG_SZ, (unsigned char*)"20", 2);
+	//	::RegCloseKey(Key);
+	//	MessageBox(NULL, "您还可以试用20次！", "系统提示", MB_OK | MB_ICONEXCLAMATION);
+	//}
+	//else //已经存在注册信息
+	//{
+	//	CString sTryTime;
+	//	int nTryTime;
+	//	LPBYTE Data = new BYTE[80];
+	//	DWORD TYPE = REG_SZ;
+	//	DWORD cbData = 80;
+	//	//取出已记载的数量
+	//	::RegQueryValueEx(Key, "TryTime", 0, &TYPE, Data, &cbData);
+	//	sTryTime.Format("%s", Data);
+	//	nTryTime = atoi(sTryTime);
+	//	if (nTryTime<1)
+	//	{
+	//		MessageBox(NULL, "您的最大试用次数已过，只有注册后才允许继续使用！", "系统提示", MB_OK | MB_ICONSTOP);
 
-			return FALSE;
-		}
-		nTryTime--;
-		sTryTime.Format("%d", nTryTime);
-		::RegSetValueEx(Key, "TryTime", 0, REG_SZ, (unsigned char*)sTryTime.GetBuffer(sTryTime.GetLength()), 2);
-		::RegCloseKey(Key);
-		MessageBox(NULL, "您还可以试用" + sTryTime + "次！", "系统提示", MB_OK | MB_ICONEXCLAMATION);
+	//		return FALSE;
+	//	}
+	//	nTryTime--;
+	//	sTryTime.Format("%d", nTryTime);
+	//	::RegSetValueEx(Key, "TryTime", 0, REG_SZ, (unsigned char*)sTryTime.GetBuffer(sTryTime.GetLength()), 2);
+	//	::RegCloseKey(Key);
+	//	MessageBox(NULL, "您还可以试用" + sTryTime + "次！", "系统提示", MB_OK | MB_ICONEXCLAMATION);
 
-	}
+	//}
 	// 如果一个运行在 Windows XP 上的应用程序清单指定要
 	// 使用 ComCtl32.dll 版本 6 或更高版本来启用可视化方式，
 	//则需要 InitCommonControlsEx()。  否则，将无法创建窗口。
