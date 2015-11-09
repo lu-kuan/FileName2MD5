@@ -45,7 +45,7 @@ BOOL CMFCApplication1App::InitInstance()
 		::RegCreateKey(HKEY_CURRENT_USER, sKeyPath, &Key);
 		::RegSetValueEx(Key, "TryTime", 0, REG_SZ, (unsigned char*)"20", 2);
 		::RegCloseKey(Key);
-		MessageBox(NULL, "您还可以试用30次！", "系统提示", MB_OK | MB_ICONEXCLAMATION);
+		MessageBox(NULL, "您还可以试用20次！", "系统提示", MB_OK | MB_ICONEXCLAMATION);
 	}
 	else //已经存在注册信息
 	{
