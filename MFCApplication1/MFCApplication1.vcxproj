@@ -221,6 +221,7 @@
     <ResourceCompile Include="MFCApplication1.rc" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="res\icon1.ico" />
     <Image Include="res\MFCApplication1.ico" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -75,6 +75,9 @@ BEGIN_MESSAGE_MAP(CMFCApplication1Dlg, CDHtmlDialog)
 	ON_BN_CLICKED(IDC_BUTTON2, &CMFCApplication1Dlg::OnBnClickedButton2)
 	ON_LBN_SELCHANGE(IDC_LIST2, &CMFCApplication1Dlg::OnLbnSelchangeList2)
 	ON_WM_SIZE()
+	ON_BN_CLICKED(IDC_BUTTON3, &CMFCApplication1Dlg::OnBnClickedButton3)
+	ON_BN_CLICKED(IDC_BUTTON4, &CMFCApplication1Dlg::OnBnClickedButton4)
+	ON_BN_CLICKED(IDC_BUTTON5, &CMFCApplication1Dlg::OnBnClickedButton5)
 END_MESSAGE_MAP()
 
 
@@ -179,7 +182,14 @@ HRESULT CMFCApplication1Dlg::OnButtonCancel(IHTMLElement* /*pElement*/)
 
 void CMFCApplication1Dlg::OnLbnSelchangeList1()
 {
-	// TODO: 在此添加控件通知处理程序代码
+	for (int i = listbox.GetCount() - 1;i >= 0;i--)
+	{
+		if (listbox.GetSel(i))
+		{
+
+			listbox2.SetCurSel(i);
+		}
+	}
 }
 
 
@@ -225,19 +235,9 @@ void CMFCApplication1Dlg::OnDropFiles(HDROP hDropInfo)
 
 void CMFCApplication1Dlg::OnBnClickedButton1()
 {
-	//CFile f("文本文档.txt", CFile::modeCreate | CFile::modeNoTruncate | CFile::modeWrite);
-//	CString s;
-	//GetDlgItemText(IDC_LIST1, s);
-//	MessageBox(listbox.GetText);
-	
-	//return;
-	// write it to file
- CStdioFile file;
-	//CFile f("aaa.txt", CFile::modeCreate | CFile::modeNoTruncate | CFile::modeWrite);
 
-//	f.SeekToEnd();
-	//f.Write((LPCTSTR)s, s.GetLength());
-//	f.Close();
+ CStdioFile file;
+
 	if (file.Open("info.txt", CFile::modeWrite | CFile::modeCreate))
 	{
 		int total = (int)listbox2.GetCount();
@@ -249,6 +249,22 @@ void CMFCApplication1Dlg::OnBnClickedButton1()
 			file.WriteString(str);
 		}
 	}
+
+	HMODULE module = GetModuleHandle(0);
+	char pFileName[MAX_PATH];
+	GetModuleFileName(module, pFileName, MAX_PATH);
+
+	CString csFullPath(pFileName);
+	int nPos = csFullPath.ReverseFind(_T('\\'));
+	if (nPos < 0) {
+		csFullPath =  CString("");
+	}
+		
+	else {
+		csFullPath = csFullPath.Left(nPos);
+	}
+	file.Close();
+	MessageBox("生成成功！生成路径为：" + csFullPath);
 
 }
 
@@ -262,7 +278,15 @@ void CMFCApplication1Dlg::OnBnClickedButton2()
 
 void CMFCApplication1Dlg::OnLbnSelchangeList2()
 {
-	// TODO: 在此添加控件通知处理程序代码
+	for (int i = listbox2.GetCount() - 1;i >= 0;i--)
+	{
+		if (listbox2.GetSel(i))
+		{
+			
+			listbox.SetCurSel(i);
+		}
+	}
+
 }
 
 
@@ -271,10 +295,10 @@ void CMFCApplication1Dlg::OnSize(UINT nType, int cx, int cy)
 	CDHtmlDialog::OnSize(nType, cx, cy);
 	CWnd* pWnd = GetDlgItem(IDC_LIST1);
 	if (pWnd->GetSafeHwnd())
-		pWnd->MoveWindow(15, 15, 240, cy - 30);
+		pWnd->MoveWindow(15, 15, 220, cy - 30);
 	CWnd* pWnd2 = GetDlgItem(IDC_LIST2);
 	if (pWnd2->GetSafeHwnd())
-		pWnd2->MoveWindow(250, 15, 240, cy - 30);
+		pWnd2->MoveWindow(220, 15, 210, cy - 30);
 //	CWnd* pWnd3 = GetDlgItem(IDC_BUTTON2);
 //	if (pWnd3->GetSafeHwnd())
 ////		pWnd3->MoveWindow(cx - 50, cy-200, cx - 10, cy - 100);
@@ -283,4 +307,119 @@ void CMFCApplication1Dlg::OnSize(UINT nType, int cx, int cy)
 	//CWnd *pWnd3;
 //	pWnd3 = GetDlgItem(IDC_BUTTON2);    //获取控件指针，IDC_BUTTON1为控件ID号  
 	//pWnd3->SetWindowPos(NULL, 50, 80, 0, 0, SWP_NOZORDER | SWP_NOSIZE);
+}
+
+
+void CMFCApplication1Dlg::OnBnClickedButton3()
+{
+	// TODO: Add your control notification handler code here   
+	// 设置过滤器   
+	TCHAR szFilter[] = _T("文本文件(*.txt)|*.txt|所有文件(*.*)|*.*||");
+	// 构造打开文件对话框   
+	CFileDialog fileDlg(TRUE, _T("txt"), NULL, 0, szFilter, this);
+	CString szFilePathName;
+
+	// 显示打开文件对话框   
+	if (IDOK == fileDlg.DoModal())
+	{
+		// 如果点击了文件对话框上的“打开”按钮，则将选择的文件路径显示到编辑框里   
+		szFilePathName = fileDlg.GetPathName();
+		//SetDlgItemText(IDC_OPEN_EDIT, strFilePath);
+
+		CString str2 = (_tcsrchr(szFilePathName, '\\'));
+		str2.Remove('\\'); //截取得到文件全名。如abc.avi
+
+		CString str4 = ",";
+		CString str8;
+		//CString str5 = "字节";
+		WIN32_FILE_ATTRIBUTE_DATA FindFileData;
+		GetFileAttributesEx(szFilePathName, GetFileExInfoStandard, &FindFileData);
+		//通过GetFileAttributesEx取的文件字节数
+		ULONGLONG FileSize = (FindFileData.nFileSizeHigh * 4294967296) + FindFileData.nFileSizeLow;
+		str8.Format("%I64u", FileSize);
+		str2 = str2 + str4 + str8;//文件全名+，+字节数 readme.txt,137
+		CString strmd5;
+		MD5 md5;                 //定义MD5的类
+		md5.update(str2.GetBuffer());          //因为update函数只接收string类型，所以使用getbuffer()函数转换CString为string
+											   //md5.update(ifstream("E:\TDDownload\jre-8u66-windows-x64.exe)"));
+		strmd5 = md5.toString().c_str() + str4;     //toString()函数获得加密字符串，c_str();函数重新转换成CString类型
+		listbox.AddString(str2);
+		listbox2.AddString(strmd5); //32位小写md5 （文件名.拓展名,字节数）
+	 
+	}
+}
+
+
+void CMFCApplication1Dlg::OnBnClickedButton4()
+{
+	//CString str;
+	for (int i = listbox.GetCount() - 1;i >= 0;i--)
+	{
+		if (listbox.GetSel(i))
+		{
+
+			//listbox.GetText(i, str);
+			//m_ToBeAdded.AddString(str);
+			listbox.DeleteString(i);
+			listbox2.DeleteString(i);
+		}
+	}
+	for (int i = listbox2.GetCount() - 1;i >= 0;i--)
+	{
+		if (listbox2.GetSel(i))
+		{
+
+			//listbox.GetText(i, str);
+			//m_ToBeAdded.AddString(str);
+			listbox.DeleteString(i);
+			listbox2.DeleteString(i);
+		}
+	}
+}
+
+
+
+void CMFCApplication1Dlg::OnBnClickedButton5()
+{
+	char szPath[MAX_PATH];     //存放选择的目录路径 
+	CString str;
+
+	ZeroMemory(szPath, sizeof(szPath));
+
+	BROWSEINFO bi;
+	bi.hwndOwner = m_hWnd;
+	bi.pidlRoot = NULL;
+	bi.pszDisplayName = szPath;
+	bi.lpszTitle = "请选择需要存放加密文件的目录：";
+	bi.ulFlags = 0;
+	bi.lpfn = NULL;
+	bi.lParam = 0;
+	bi.iImage = 0;
+	//弹出选择目录对话框
+	LPITEMIDLIST lp = SHBrowseForFolder(&bi);
+
+	if (lp && SHGetPathFromIDList(lp, szPath))
+	{
+		CStdioFile file;
+		CString info = "\\info.txt";
+		info = szPath + info;
+		
+		
+		if (file.Open(info, CFile::modeWrite | CFile::modeCreate))
+		{
+			int total = (int)listbox2.GetCount();
+
+			for (int ii = 0; ii< total; ii++)
+			{
+				char str[MAX_PATH] = { 0 };
+				listbox2.GetText(ii, str);
+				file.WriteString(str);
+			}
+		}
+		file.Close();
+		MessageBox("生成成功！生成路径为：" + info);
+
+	}
+	else
+		AfxMessageBox("无效的目录，请重新选择");
 }
