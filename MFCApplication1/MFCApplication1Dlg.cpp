@@ -295,7 +295,7 @@ void CMFCApplication1Dlg::OnSize(UINT nType, int cx, int cy)
 	CDHtmlDialog::OnSize(nType, cx, cy);
 	CWnd* pWnd = GetDlgItem(IDC_LIST1);
 	if (pWnd->GetSafeHwnd())
-		pWnd->MoveWindow(15, 15, 220, cy - 30);
+		pWnd->MoveWindow(15, 15, 210, cy - 30);
 	CWnd* pWnd2 = GetDlgItem(IDC_LIST2);
 	if (pWnd2->GetSafeHwnd())
 		pWnd2->MoveWindow(220, 15, 210, cy - 30);
@@ -314,7 +314,7 @@ void CMFCApplication1Dlg::OnBnClickedButton3()
 {
 	// TODO: Add your control notification handler code here   
 	// 设置过滤器   
-	TCHAR szFilter[] = _T("文本文件(*.txt)|*.txt|所有文件(*.*)|*.*||");
+	TCHAR szFilter[] = _T("所有文件(*.*)|*.*||");
 	// 构造打开文件对话框   
 	CFileDialog fileDlg(TRUE, _T("txt"), NULL, 0, szFilter, this);
 	CString szFilePathName;
