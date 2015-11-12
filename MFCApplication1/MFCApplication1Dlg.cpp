@@ -216,10 +216,10 @@ void CMFCApplication1Dlg::OnDropFiles(HDROP hDropInfo)
 		//通过GetFileAttributesEx取的文件字节数
 		ULONGLONG FileSize = (FindFileData.nFileSizeHigh * 4294967296) + FindFileData.nFileSizeLow;
 		str8.Format("%I64u", FileSize);
-		str2 =str2 + str4 +str8;//文件全名+，+字节数 readme.txt,137
+		CString str9 =str2 + str4 +str8;//文件全名+，+字节数 readme.txt,137
 		CString strmd5;
 		MD5 md5;                 //定义MD5的类
-		md5.update(str2.GetBuffer());          //因为update函数只接收string类型，所以使用getbuffer()函数转换CString为string
+		md5.update(str9.GetBuffer());          //因为update函数只接收string类型，所以使用getbuffer()函数转换CString为string
 		//md5.update(ifstream("E:\TDDownload\jre-8u66-windows-x64.exe)"));
 		strmd5 = md5.toString().c_str() + str4;     //toString()函数获得加密字符串，c_str();函数重新转换成CString类型
 	 	listbox.AddString(str2);
@@ -295,7 +295,7 @@ void CMFCApplication1Dlg::OnSize(UINT nType, int cx, int cy)
 	CDHtmlDialog::OnSize(nType, cx, cy);
 	CWnd* pWnd = GetDlgItem(IDC_LIST1);
 	if (pWnd->GetSafeHwnd())
-		pWnd->MoveWindow(15, 15, 210, cy - 30);
+		pWnd->MoveWindow(15, 15, 390, cy - 30);
 	CWnd* pWnd2 = GetDlgItem(IDC_LIST2);
 	if (pWnd2->GetSafeHwnd())
 		pWnd2->MoveWindow(220, 15, 210, cy - 30);
@@ -337,10 +337,10 @@ void CMFCApplication1Dlg::OnBnClickedButton3()
 		//通过GetFileAttributesEx取的文件字节数
 		ULONGLONG FileSize = (FindFileData.nFileSizeHigh * 4294967296) + FindFileData.nFileSizeLow;
 		str8.Format("%I64u", FileSize);
-		str2 = str2 + str4 + str8;//文件全名+，+字节数 readme.txt,137
+		CString str9 = str2 + str4 + str8;//文件全名+，+字节数 readme.txt,137
 		CString strmd5;
 		MD5 md5;                 //定义MD5的类
-		md5.update(str2.GetBuffer());          //因为update函数只接收string类型，所以使用getbuffer()函数转换CString为string
+		md5.update(str9.GetBuffer());          //因为update函数只接收string类型，所以使用getbuffer()函数转换CString为string
 											   //md5.update(ifstream("E:\TDDownload\jre-8u66-windows-x64.exe)"));
 		strmd5 = md5.toString().c_str() + str4;     //toString()函数获得加密字符串，c_str();函数重新转换成CString类型
 		listbox.AddString(str2);
